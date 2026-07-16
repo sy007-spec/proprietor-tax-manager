@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企业主收入税务优化计算器</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>企业主收入税务优化计算器</h1>
+    <p class="sub">小规模纳税人 · 增值税季度免税筹划 · 社保公积金 · 个税专项附加扣除 · 年终奖拆分 · 小微企业所得税</p>
+    <div class="preset-row">
+      <button id="btnOriginal" class="btn-secondary">载入原始方案</button>
+      <button id="btnOptimized" class="btn-primary">载入优化方案</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- 左侧：输入 -->
+  <section class="col-inputs">
+
+    <div class="card">
+      <h2>① 公司收入与增值税</h2>
+      <div class="grid2">
+        <label>开票方式
+          <span class="radio-row">
+            <label class="mini"><input type="radio" name="qmode" value="avg">平均开票</label>
+            <label class="mini"><input type="radio" name="qmode" value="custom">按季自定义</label>
+          </span>
+        </label>
+        <label id="annualRevWrap">年含税收入（元）<input type="number" id="annualRevenue" step="10000"></label>
+      </div>
+      <div id="quarterBox">
+        <div class="grid4">
+          <label>Q1 开票<input type="number" data-q="0" step="10000"></label>
+          <label>Q2 开票<input type="number" data-q="1" step="10000"></label>
+          <label>Q3 开票<input type="number" data-q="2" step="10000"></label>
+          <label>Q4 开票<input type="number" data-q="3" step="10000"></label>
+        </div>
+        <div class="hint-row"><span id="qSum" class="dim"></span></div>
+      </div>
+      <div class="grid3">
+        <label>增值税征收率（%）<input type="number" id="vatRate" step="0.5"></label>
+        <label>附加税率（占增值税 %）<input type="number" id="surchargeRate" step="1"></label>
+        <span class="opt-row"><button id="btnQOptimize" class="btn-secondary">一键优化开票节奏</button></span>
+      </div>
+      <p class="note">季度不含税销售额 ≤ 30 万元免征增值税（免税季按含税额全额确认收入）。多地附加税对小规模纳税人减半征收，实际可能为 6%。</p>
+    </div>
+
+    <div class="card">
+      <h2>② 社保公积金参数</h2>
+      <div class="grid4">
+        <label>公司社保比例（%）<input type="number" id="siCompRate" step="0.1"></label>
+        <label>个人社保比例（%）<input type="number" id="siPersRate" step="0.1"></label>
+        <label>缴费基数上限<input type="number" id="siCap" step="1"></label>
+        <label>缴费基数下限<input type="number" id="siFloor" step="1"></label>
+      </div>
+      <p class="note">公积金公司与个人按相同比例缴纳（基础 5%–7%，补充 0%–5%），与社保共用同一缴费基数。</p>
+    </div>
+
+    <div class="card">
+      <h2>③ 人员配置</h2>
+      <div id="empList"></div>
+      <button id="btnAddEmp" class="btn-secondary">＋ 添加人员</button>
+      <p class="note warn">合规提示：亲属/实习生用工需真实任职受雇并留存考勤、成果等证据，虚列工资属偷逃税行为。</p>
+    </div>
+
+    <div class="card">
+      <h2>④ 其他成本与分配</h2>
+      <div class="grid3">
+        <label>房租报销（元/月）<input type="number" id="rentReimburse" step="500"></label>
+        <label>其他年度成本（元）<input type="number" id="otherCost" step="1000"></label>
+        <label class="mini dividend-toggle"><input type="checkbox" id="dividend">税后利润全额分红（20% 个税）</label>
+      </div>
+      <p class="note">房租报销需取得公司抬头发票方可税前扣除；若公司承担房租，个人不应再同时申报住房租金专项附加扣除。</p>
+    </div>
+
+  </section>
+
+  <!-- 右侧：结果 -->
+  <section class="col-results">
+    <div id="kpis" class="kpi-row"></div>
+
+    <div class="card">
+      <h2>增值税与附加税</h2>
+      <div class="tbl-wrap"><table class="tbl" id="vatTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2>人员明细（年度）</h2>
+      <div class="tbl-wrap"><table class="tbl" id="empTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2>企业所得税</h2>
+      <div id="citBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>税费汇总</h2>
+      <div id="taxBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>家庭收益</h2>
+      <div id="famBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>方案对比</h2>
+      <div class="snap-row">
+        <input type="text" id="snapName" placeholder="方案名称（如：优化方案）">
+        <button id="btnSnap" class="btn-primary">保存当前方案</button>
+      </div>
+      <div id="snapBox"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>本工具仅供测算参考，税率与政策（小规模 1% 征收率、季度 30 万免税、小微 5%、年终奖单独计税等）均有适用期限与地区差异，实际申报请以主管税务机关口径为准。</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
