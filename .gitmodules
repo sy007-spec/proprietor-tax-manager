@@ -1,0 +1,3 @@
+[submodule "vendor/project-iron-core"]
+	path = vendor/project-iron-core
+	url = git@github.com:sy007-spec/meta-injector.git
