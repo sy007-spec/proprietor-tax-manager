@@ -1,0 +1,15 @@
+---
+description: Project metadata contract for model behavior enforcement
+globs:
+alwaysApply: true
+---
+
+# Project LLM Metadata Contract
+
+The project requirements metadata file is `PROJECT_LLM_REQUIREMENTS.json`.
+Treat it as authoritative constraints for this repository.
+
+Enforcement:
+- Apply all enabled rules every session.
+- Do not treat metadata as documentation-only.
+- If a user request adds new constraints, update metadata and synced rule files.

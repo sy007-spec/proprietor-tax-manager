@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "project_mode": "npx_skill_orchestration",
+  "requirements": {
+    "prompt_archive_append_only": true,
+    "rule_surfaces_sync_on_each_intake": true,
+    "enforce_english_ui_only": true,
+    "unified_ops_entrypoint": "python ops.py restart",
+    "archive_every_llm_conversation_output": true,
+    "llm_output_archive_path_pattern": "LLM_OUTPUTS/YYYY/MM/DD/HHmmss-topic.md",
+    "requirement_driven_spec_first": true,
+    "requirement_spec_workflow": "author_or_update_spec_before_build_then_feedback_to_spec",
+    "tools_in_scope": [
+      "codex",
+      "cursor",
+      "claude-code",
+      "vscode"
+    ]
+  },
+  "rule_surfaces": [
+    "PROJECT_IRON_RULES_SPEC.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".cursor/rules/project-iron-rules.mdc",
+    ".cursor/rules/project-llm-metadata.mdc",
+    ".vscode/RULES.md"
+  ],
+  "bindings": {
+    "project_iron_core_path": "vendor/project-iron-core",
+    "binding_mode": "submodule",
+    "authority_hint": "host-repo-rules-first"
+  },
+  "update_policy": {
+    "sync_all_surfaces_on_change": true,
+    "record_raw_prompt_in_prompt_log": true
+  }
+}

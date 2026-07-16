@@ -1,0 +1,15 @@
+---
+description: Project iron rules baseline for prompt and output governance
+globs:
+alwaysApply: true
+---
+
+# Project Iron Rules (Cursor)
+
+1) Archive prompts into `PROMPT_INPUT_LOG.md`.
+2) Sync rules across AGENTS/Codex, Claude, Cursor, and VSCode on every intake.
+3) Use unified ops command: `python ops.py restart`.
+4) Archive each conversation output to `LLM_OUTPUTS/YYYY/MM/DD/*.md`.
+5) Keep npx skill orchestration as baseline.
+6) Load and enforce `PROJECT_LLM_REQUIREMENTS.json` as project metadata.
+7) **Requirements spec first:** complete repo-controlled spec before substantive build; update spec from implementation (Rule 9).
