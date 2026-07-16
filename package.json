@@ -1,0 +1,14 @@
+{
+  "name": "proprietor-tax-manager",
+  "version": "1.0.0",
+  "description": "中国企业主个人收入税务优化计算服务（零依赖：Node 内置 http + node:sqlite）",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "sync": "node -e \"console.log(JSON.stringify(require('./db').syncBaseData(), null, 2))\""
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "license": "MIT"
+}

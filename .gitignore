@@ -15,6 +15,16 @@
 # production
 /build
 
+# sqlite database (runtime data)
+/data/taxmgr.db
+/data/taxmgr.db-*
+/data/server.pid
+
+# ops runtime
+/logs/
+/backups/
+/ops.config.json
+
 # misc
 .DS_Store
 *.pem

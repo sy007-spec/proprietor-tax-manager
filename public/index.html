@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>企业主收入税务优化计算服务</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <div>
+        <h1 data-i18n="app.title"></h1>
+        <p class="sub" data-i18n="app.sub"></p>
+      </div>
+      <div class="toolbar">
+        <span class="tb-group">👤 <select id="userSel"></select>
+          <button id="btnNewUser" class="btn-ghost" data-i18n="toolbar.newUser"></button></span>
+        <span class="tb-group">📁 <select id="planSel"></select>
+          <button id="btnSavePlan" class="btn-ghost" data-i18n="toolbar.savePlan"></button>
+          <button id="btnSaveAs" class="btn-ghost" data-i18n="toolbar.saveAs"></button>
+          <button id="btnDelPlan" class="btn-ghost" title="delete">🗑</button></span>
+        <button id="btnLang" class="btn-ghost btn-lang">EN</button>
+      </div>
+    </div>
+    <div class="preset-row">
+      <button id="btnOriginal" class="btn-secondary" data-i18n="preset.original"></button>
+      <button id="btnOptimized" class="btn-primary" data-i18n="preset.optimized"></button>
+    </div>
+    <div id="serverBanner" class="banner" hidden></div>
+  </div>
+</header>
+
+<main>
+  <!-- 左侧：输入 -->
+  <section class="col-inputs">
+
+    <div class="card">
+      <h2 data-i18n="region.title"></h2>
+      <div class="grid3">
+        <label><span data-i18n="region.select"></span><select id="regionSel"></select></label>
+        <span class="opt-row"><button id="btnSync" class="btn-secondary" data-i18n="region.sync"></button></span>
+        <span class="opt-row"><button id="btnApplyRegion" class="btn-primary" data-i18n="region.apply"></button></span>
+      </div>
+      <div id="regionInfo"></div>
+      <p class="note" id="syncStatus" hidden></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="vat.title"></h2>
+      <div class="grid2">
+        <label><span data-i18n="vat.mode"></span>
+          <span class="radio-row">
+            <label class="mini"><input type="radio" name="qmode" value="avg"><span data-i18n="vat.modeAvg"></span></label>
+            <label class="mini"><input type="radio" name="qmode" value="custom"><span data-i18n="vat.modeCustom"></span></label>
+          </span>
+        </label>
+        <label id="annualRevWrap"><span data-i18n="vat.annualRevenue"></span><input type="number" id="annualRevenue" step="10000"></label>
+      </div>
+      <div id="quarterBox">
+        <div class="grid4">
+          <label><span data-i18n="vat.q1"></span><input type="number" data-q="0" step="10000"></label>
+          <label><span data-i18n="vat.q2"></span><input type="number" data-q="1" step="10000"></label>
+          <label><span data-i18n="vat.q3"></span><input type="number" data-q="2" step="10000"></label>
+          <label><span data-i18n="vat.q4"></span><input type="number" data-q="3" step="10000"></label>
+        </div>
+        <div class="hint-row"><span id="qSum" class="dim"></span></div>
+      </div>
+      <div class="grid3">
+        <label><span data-i18n="vat.rate"></span><input type="number" id="vatRate" step="0.5"></label>
+        <label><span data-i18n="vat.surchargeRate"></span><input type="number" id="surchargeRate" step="1"></label>
+        <span class="opt-row"><button id="btnQOptimize" class="btn-secondary" data-i18n="vat.optimizeBtn"></button></span>
+      </div>
+      <p class="note" data-i18n="vat.note"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="si.title"></h2>
+      <div class="grid4">
+        <label><span data-i18n="si.compRate"></span><input type="number" id="siCompRate" step="0.1"></label>
+        <label><span data-i18n="si.persRate"></span><input type="number" id="siPersRate" step="0.1"></label>
+        <label><span data-i18n="si.cap"></span><input type="number" id="siCap" step="1"></label>
+        <label><span data-i18n="si.floor"></span><input type="number" id="siFloor" step="1"></label>
+      </div>
+      <p class="note" data-i18n="si.note"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="emp.title"></h2>
+      <div id="empList"></div>
+      <button id="btnAddEmp" class="btn-secondary" data-i18n="emp.add"></button>
+      <p class="note warn" data-i18n="emp.complianceNote"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="other.title"></h2>
+      <div class="grid3">
+        <label><span data-i18n="other.rent"></span><input type="number" id="rentReimburse" step="500"></label>
+        <label><span data-i18n="other.otherCost"></span><input type="number" id="otherCost" step="1000"></label>
+        <label class="mini dividend-toggle"><input type="checkbox" id="dividend"><span data-i18n="other.dividend"></span></label>
+      </div>
+      <p class="note" data-i18n="other.note"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="params.title"></h2>
+      <div id="paramsBox"></div>
+      <div class="opt-row">
+        <button id="btnSaveParams" class="btn-primary" data-i18n="params.saveServer"></button>
+        <button id="btnResetParams" class="btn-secondary" data-i18n="params.reset"></button>
+      </div>
+      <p class="note" data-i18n="params.note"></p>
+    </div>
+
+  </section>
+
+  <!-- 右侧：结果 -->
+  <section class="col-results">
+    <div id="kpis" class="kpi-row"></div>
+
+    <div class="card">
+      <h2 data-i18n="res.vatTitle"></h2>
+      <div class="tbl-wrap"><table class="tbl" id="vatTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="res.empTitle"></h2>
+      <div class="tbl-wrap"><table class="tbl" id="empTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="res.citTitle"></h2>
+      <div id="citBox"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="res.taxTitle"></h2>
+      <div id="taxBox"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="res.famTitle"></h2>
+      <div id="famBox"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="res.snapTitle"></h2>
+      <div class="snap-row">
+        <input type="text" id="snapName" data-i18n-ph="snap.namePh">
+        <button id="btnSnap" class="btn-primary" data-i18n="snap.save"></button>
+      </div>
+      <div id="snapBox"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p data-i18n="footer.disclaimer"></p>
+</footer>
+
+<div id="toast" hidden></div>
+
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
